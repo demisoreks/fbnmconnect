@@ -61,9 +61,7 @@ class LoginController extends Controller
                     ->with('error', '<span class="font-weight-bold">Login error!</span><br />User does not exist.');
         }*/
         if ($input['username'] == "system" && $input['password'] == "default") {
-            $user = ['id' => 0, 'username' => 'system', 'first_name' => 'System', 'surname' => 'Administrator'];
-            if (!isset($_SESSION)) session_start ();
-            $_SESSION['fbnm_user'] = $user;
+            $user = ['id' => 1, 'username' => 'system', 'first_name' => 'System', 'surname' => 'Administrator'];
             Session::put('fbnm_user', $user);
             return Redirect::route('dashboard');
         } else {

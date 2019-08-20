@@ -1,7 +1,6 @@
-@extends('app', ['page_title' => 'Dashboard'])
+@extends('module', ['page_title' => 'Dashboard'])
 
 @section('content')
-@include('commons.message')
 <div class="row">
     <div class="col-lg-3">
         <div class="card" style="margin-bottom: 20px;">
