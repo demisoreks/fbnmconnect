@@ -5,15 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Balping\HashSlug\HasHashSlug;
 
-class HrmGrade extends Model
+class AccActivity extends Model
 {
     use HasHashSlug;
     
-    protected $table = "hrm_grades";
+    protected $table = "acc_activities";
     
     protected $guarded = [];
-    
-    public function employees() {
-        return $this->hasMany('App\HrmEmployee');
-    }
 }

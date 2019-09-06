@@ -16,7 +16,9 @@
                     <div class="card-body">
                         <nav class="nav flex-column">
                             <a class="nav-link" href="{{ route('hrms') }}">Home</a>
-                            <a class="nav-link" href="#">Employees</a>
+                            <a class="nav-link" href="{{ route('employees.create') }}">New Employee</a>
+                            <a class="nav-link" href="{{ route('employees.index') }}">Active Employees</a>
+                            <a class="nav-link" href="{{ route('approvals') }}">Approvals <span class="badge badge-primary">{{ App\HrmEmployee::where('status', 'New')->count() }}</span></a>
                         </nav>
                     </div>
                 </div> 

@@ -45,6 +45,9 @@ Route::bind('grades', function($value, $route) {
     return App\HrmGrade::findBySlug($value)->first();
 });
 
+Route::get('hrms/departments/{department_id}/get_units', [
+    'as' => 'departments.get_units', 'uses' => 'DepartmentsController@get_units'
+]);
 Route::get('hrms/departments/{department}/disable', [
     'as' => 'departments.disable', 'uses' => 'DepartmentsController@disable'
 ])->middleware('auth.user');
@@ -56,6 +59,9 @@ Route::bind('departments', function($value, $route) {
     return App\HrmDepartment::findBySlug($value)->first();
 });
 
+Route::get('hrms/units/{unit_id}/get_job_functions', [
+    'as' => 'units.get_job_functions', 'uses' => 'UnitsController@get_job_functions'
+]);
 Route::get('hrms/departments/{department}/units/{unit}/disable', [
     'as' => 'departments.units.disable', 'uses' => 'UnitsController@disable'
 ])->middleware('auth.user');
@@ -87,4 +93,48 @@ Route::get('hrms/branches/{branch}/enable', [
 Route::resource('hrms/branches', 'BranchesController')->middleware('auth.user');
 Route::bind('branches', function($value, $route) {
     return App\HrmBranch::findBySlug($value)->first();
+});
+
+Route::post('hrms/employees/{employee}/submit_approval', [
+    'as' => 'employees.submit_approval', 'uses' => 'EmployeesController@submit_approval'
+])->middleware('auth.user');
+Route::get('hrms/employees/{employee}/approve', [
+    'as' => 'employees.approve', 'uses' => 'EmployeesController@approve'
+])->middleware('auth.user');
+Route::get('hrms/employees/pending', [
+    'as' => 'employees.pending', 'uses' => 'EmployeesController@pending'
+])->middleware('auth.user');
+Route::resource('hrms/employees', 'EmployeesController')->middleware('auth.user');
+Route::bind('employees', function($value, $route) {
+    return App\HrmEmployee::findBySlug($value)->first();
+});
+
+Route::get('hrms/approvals', [
+    'as' => 'approvals', 'uses' => 'HrmsController@approvals'
+])->middleware('auth.user');
+
+Route::get('access', [
+    'as' => 'access', 'uses' => 'AccessController@index'
+])->middleware('auth.user');
+
+Route::get('access/links/{link}/disable', [
+    'as' => 'links.disable', 'uses' => 'LinksController@disable'
+])->middleware('auth.user');
+Route::get('access/links/{link}/enable', [
+    'as' => 'links.enable', 'uses' => 'LinksController@enable'
+])->middleware('auth.user');
+Route::resource('access/links', 'LinksController')->middleware('auth.user');
+Route::bind('links', function($value, $route) {
+    return App\AccLink::findBySlug($value)->first();
+});
+
+Route::get('access/links/{link}/roles/{role}/disable', [
+    'as' => 'links.roles.disable', 'uses' => 'RolesController@disable'
+])->middleware('auth.user');
+Route::get('access/links/{link}/roles/{role}/enable', [
+    'as' => 'links.roles.enable', 'uses' => 'RolesController@enable'
+])->middleware('auth.user');
+Route::resource('access/links.roles', 'RolesController')->middleware('auth.user');
+Route::bind('roles', function($value, $route) {
+    return App\AccRole::findBySlug($value)->first();
 });

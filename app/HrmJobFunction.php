@@ -16,4 +16,8 @@ class HrmJobFunction extends Model
     public function unit() {
         return $this->belongsTo('App\HrmUnit');
     }
+    
+    public function employees() {
+        return $this->hasMany('App\HrmEmployee');
+    }
 }

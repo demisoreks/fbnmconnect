@@ -41,8 +41,8 @@
                 <strong>MY CABAL</strong>
             </div>
             <div class="card-body" style="height: 250px;">
-                <div id="cabal" style="width: 100%;"></div>
-                @columnchart('Cabal', 'cabal')
+                {!! $cabal->container() !!}
+                {!! $cabal->script() !!}
             </div>
         </div>
     </div>

@@ -15,7 +15,7 @@
                 <div id="collapse1" class="collapse" aria-labelledby="heading1" data-parent="#accordion">
                     <div class="card-body">
                         <nav class="nav flex-column">
-                            <a class="nav-link" href="#" target="_blank">BVN Validation</a>
+                            <a class="nav-link" href="access" target="_blank">Access Manager</a>
                             <a class="nav-link" href="#" target="_blank">Branch Operations</a>
                             <a class="nav-link" href="hrms" target="_blank">HR Manager</a>
                             <a class="nav-link" href="#" target="_blank">Finance Reports</a>

@@ -8,6 +8,7 @@ use Input;
 use Redirect;
 use App\HrmDepartment;
 use App\HrmUnit;
+use App\HrmJobFunction;
 
 class UnitsController extends Controller
 {
@@ -86,5 +87,9 @@ class UnitsController extends Controller
         HrmsController::logActivity('Unit was enabled - '.$unit->name.'.');
         return Redirect::route('departments.units.index', [$department->slug()])
                 ->with('success', '<span class="font-weight-bold">Successful!</span><br />Unit has been enabled.');
+    }
+    
+    public function get_job_functions(int $unit_id) {
+        return HrmJobFunction::where('unit_id', $unit_id)->where('active', true)->orderBy('name')->get()->toJson();
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Input;
 use Redirect;
 use App\HrmDepartment;
+use App\HrmUnit;
 
 class DepartmentsController extends Controller
 {
@@ -84,5 +85,9 @@ class DepartmentsController extends Controller
         HrmsController::logActivity('Department was enabled - '.$department->name.'.');
         return Redirect::route('departments.index')
                 ->with('success', '<span class="font-weight-bold">Successful!</span><br />Department has been enabled.');
+    }
+    
+    public function get_units(int $department_id) {
+        return HrmUnit::where('department_id', $department_id)->where('active', true)->orderBy('name')->get()->toJson();
     }
 }
