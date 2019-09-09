@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-12" style="margin-bottom: 20px;">
         <form action="{{ route('employees.destroy', [$employee->slug()]) }}" method="POST">
-        @if ($employee->status == 'New')
+        @if ($employee->status == 'New' && App\Http\Controllers\LoginController::allowed(['HRManager']))
         <a class="btn btn-success" href="{{ route('employees.approve', [$employee->slug()]) }}"><i class="fas fa-check"></i> Approve</a>
         
             {{ method_field('DELETE') }}

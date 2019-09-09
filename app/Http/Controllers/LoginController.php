@@ -8,12 +8,21 @@ use Input;
 use Redirect;
 use Session;
 use App\HrmEmployee;
+use App\HrmJobFunction;
+use App\HrmUnit;
+use App\HrmDepartment;
+use App\AccLink;
+use App\AccRole;
 
 use App\Charts\Performance;
 
 class LoginController extends Controller
 {
     public function index() {
+        if (Session::has('fbnm_user')) {
+            return Redirect::route('dashboard')
+        }
+        
         return view('welcome');
     }
     
@@ -40,22 +49,12 @@ class LoginController extends Controller
                 ]);
                 return Redirect::route('dashboard');
             } else {
-                $login_attempts = $employee->login_attempts + 1;
-                $employee->update(['login_attempts' => $login_attempts, 'last_attempt' => date('Y-m-d H:i:s')]);
                 return Redirect::back()
                         ->with('error', '<span class="font-weight-bold">Login error!</span><br />Invalid password.');
             }
         } else {
             return Redirect::back()
                     ->with('error', '<span class="font-weight-bold">Login error!</span><br />Username does not exist.');
-        }
-        if ($input['username'] == "system" && $input['password'] == "default") {
-            $user = ['id' => 1, 'username' => 'system', 'first_name' => 'System', 'surname' => 'Administrator'];
-            Session::put('fbnm_user', $user);
-            return Redirect::route('dashboard');
-        } else {
-            return Redirect::back()
-                    ->with('error', '<span class="font-weight-bold">Login error!</span><br />Invalid username or password.');
         }
     }
     
@@ -67,6 +66,64 @@ class LoginController extends Controller
         }
     }
     
+    public static function getRoles(AccLink $link) {
+        $employee = HrmEmployee::whereId(Session::get('fbnm_user')['id'])->first();
+        $roles = [];
+        foreach (AccRole::where('link_id', $link->id)->get() as $role) {
+            if ($role->all) {
+                array_push($roles, $role->id);
+            } else {
+                $employees = explode(',', $role->employees);
+                if (in_array($employee->id, $employees)) {
+                    array_push($roles, $role->id);
+                } else {
+                    if ($employee->job_function_id != null) {
+                        $job_functions = explode(',', $role->job_functions);
+                        if (in_array($employee->job_function_id, $job_functions)) {
+                            array_push($roles, $role->id);
+                        } else {
+                            $unit_id = HrmJobFunction::whereId($employee->job_function_id)->first()->unit_id;
+                            $units = explode(',', $role->units);
+                            if (in_array($unit_id, $units)) {
+                                array_push($roles, $role->id);
+                            } else {
+                                $department_id = HrmUnit::whereId($unit_id)->first()->department_id;
+                                $departments = explode(',', $role->departments);
+                                if (in_array($department_id, $departments)) {
+                                    array_push($roles, $role->id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $roles;
+    }
+    
+    public static function getAllRoles() {
+        $all_roles = [];
+        foreach (AccLink::where('active', true)->get() as $link) {
+            $all_roles = array_merge($all_roles, LoginController::getRoles($link));
+        }
+        return $all_roles;
+    }
+    
+    public static function allowed($roles) {
+        $allowed = false;
+        foreach ($roles as $role) {
+            $r = AccRole::where('title', $role)->where('active', true);
+            if ($r->count() > 0) {
+                $role_id = $r->first()->id;
+                if (in_array($role_id, LoginController::getAllRoles())) {
+                    $allowed = true;
+                    break;
+                }
+            }
+        }
+        return $allowed;
+    }
+
     /*
     public function change_password(AccEmployee $employee) {
         return view('change_password', compact('employee'));

@@ -15,10 +15,11 @@
                 <div id="collapse1" class="collapse" aria-labelledby="heading1" data-parent="#accordion">
                     <div class="card-body">
                         <nav class="nav flex-column">
-                            <a class="nav-link" href="access" target="_blank">Access Manager</a>
-                            <a class="nav-link" href="#" target="_blank">Branch Operations</a>
-                            <a class="nav-link" href="hrms" target="_blank">HR Manager</a>
-                            <a class="nav-link" href="#" target="_blank">Finance Reports</a>
+                            @foreach (App\AccLink::where('active', true)->where('general', false)->orderBy('order_no')->get() as $link)
+                                @if (count(App\Http\Controllers\LoginController::getRoles($link)) > 0)
+                                <a class="nav-link" href="{{ $link->url }}" target="_blank">{{ $link->title }}</a>
+                                @endif
+                            @endforeach
                         </nav>
                     </div>
                 </div> 
@@ -34,10 +35,9 @@
                 <div id="collapse2" class="collapse show" aria-labelledby="heading2" data-parent="#accordion">
                     <div class="card-body">
                         <nav class="nav flex-column">
-                            <a class="nav-link" href="#" target="_blank">Email</a>
-                            <a class="nav-link" href="#" target="_blank">CBA</a>
-                            <a class="nav-link" href="#" target="_blank">Employee Directory</a>
-                            <a class="nav-link" href="#" target="_blank">HR Info</a>
+                            @foreach (App\AccLink::where('active', true)->where('general', true)->orderBy('order_no')->get() as $link)
+                            <a class="nav-link" href="{{ $link->url }}" target="_blank">{{ $link->title }}</a>
+                            @endforeach
                         </nav>
                     </div>
                 </div> 

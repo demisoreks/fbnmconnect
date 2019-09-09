@@ -26,7 +26,7 @@
                                     <th><strong>NAME</strong></th>
                                     <th width="20%"><strong>USERNAME</strong></th>
                                     <th width="20%"><strong>EMPLOYEE NUMBER</strong></th>
-                                    <th width="10%">&nbsp;</th>
+                                    <th width="15%">&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>

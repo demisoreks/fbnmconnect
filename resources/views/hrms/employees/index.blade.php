@@ -27,7 +27,7 @@
                                     <th width="15%"><strong>BRANCH</strong></th>
                                     <th width="20%"><strong>GRADE</strong></th>
                                     <th width="20%"><strong>DEPARTMENT</strong></th>
-                                    <th width="10%">&nbsp;</th>
+                                    <th width="15%">&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>

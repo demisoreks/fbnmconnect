@@ -16,13 +16,18 @@
                     <div class="card-body">
                         <nav class="nav flex-column">
                             <a class="nav-link" href="{{ route('hrms') }}">Home</a>
+                            @if (App\Http\Controllers\LoginController::allowed(['HROfficer']))
                             <a class="nav-link" href="{{ route('employees.create') }}">New Employee</a>
+                            @endif
                             <a class="nav-link" href="{{ route('employees.index') }}">Active Employees</a>
+                            @if (App\Http\Controllers\LoginController::allowed(['HRManager']))
                             <a class="nav-link" href="{{ route('approvals') }}">Approvals <span class="badge badge-primary">{{ App\HrmEmployee::where('status', 'New')->count() }}</span></a>
+                            @endif
                         </nav>
                     </div>
                 </div> 
             </div>
+            @if (App\Http\Controllers\LoginController::allowed(['HRManager']))
             <div class="card">
                 <div class="card-header bg-white" id="heading2" style="padding: 0;">
                     <h5 class="mb-0">
@@ -41,6 +46,7 @@
                     </div>
                 </div> 
             </div>
+            @endif
         </div>
     </div>
     <div class="col-md-10">
