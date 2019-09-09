@@ -20,7 +20,7 @@ class LoginController extends Controller
 {
     public function index() {
         if (Session::has('fbnm_user')) {
-            return Redirect::route('dashboard')
+            return Redirect::route('dashboard');
         }
         
         return view('welcome');
