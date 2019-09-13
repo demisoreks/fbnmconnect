@@ -23,7 +23,8 @@ class LoginController extends Controller
             return Redirect::route('dashboard');
         }
         
-        return view('welcome');
+        return view('welcome')
+                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
     }
     
     public static function hashPassword($password, $times) {

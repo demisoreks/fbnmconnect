@@ -138,3 +138,10 @@ Route::resource('access/links.roles', 'RolesController')->middleware('auth.user:
 Route::bind('roles', function($value, $route) {
     return App\AccRole::findBySlug($value)->first();
 });
+
+Route::get('hrms/directory', [
+    'as' => 'directory', 'uses' => 'EmployeesController@directory'
+])->middleware('auth.user');
+Route::post('hrms/employees/{employee}/upload_picture', [
+    'as' => 'employees.upload_picture', 'uses' => 'EmployeesController@upload_picture'
+])->middleware('auth.user');

@@ -10,20 +10,50 @@
             <div class="card-body text-center" style="height: 250px;">
                 <div id="birthdays" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            {{ Html::image('images/demilades.jpg', 'Birthday picture', ['height' => '120px', 'class' => 'rounded-circle']) }}
+                        <?php
+                        $max = 20;
+                        $i = 0;
+                        ?>
+                        @foreach (App\HrmEmployee::where('status', 'Active')->whereRaw('DATE_FORMAT(date_of_birth, "%m%d") >= DATE_FORMAT(now(), "%m%d")')->orderByRaw('DATE_FORMAT(date_of_birth, "%m%d")')->get() as $celebrant)
+                        <div class="carousel-item @if ($i == 0) active @endif">    
+                            @if (File::exists('storage/pictures/'.$celebrant->id.'.jpg'))
+                            {{ Html::image('storage/pictures/'.$celebrant->id.'.jpg', 'Staff picture', ['width' => '100', 'class' => 'rounded-circle']) }}
+                            @else
+                            {{ Html::image('images/dummy-profile.png', 'Staff picture', ['width' => '100', 'class' => 'rounded-circle']) }}
+                            @endif
                             <p>
-                                <h5>Demilade Soremekun</h5>
-                                <span class="text-info">November 28</span>
+                                <h5>{{ $celebrant->first_name }}<br />{{ $celebrant->surname }}</h5>
+                                <span class="text-info">{{ date('F j', strtotime($celebrant->date_of_birth)) }}</span>
                             </p>
                         </div>
-                        <div class="carousel-item">
-                            {{ Html::image('images/demisoreks.jpg', 'Birthday picture', ['height' => '120px', 'class' => 'rounded-circle']) }}
+                        <?php
+                        $i ++;
+                        if ($i >= $max) {
+                            break;
+                        }
+                        ?>
+                        @endforeach
+                        @if ($i < $max)
+                        @foreach (App\HrmEmployee::where('status', 'Active')->whereRaw('DATE_FORMAT(date_of_birth, "%m%d") < DATE_FORMAT(now(), "%m%d")')->orderByRaw('DATE_FORMAT(date_of_birth, "%m%d")')->get() as $celebrant)
+                        <div class="carousel-item @if ($i == 0) active @endif">    
+                            @if (File::exists('storage/pictures/'.$celebrant->id.'.jpg'))
+                            {{ Html::image('storage/pictures/'.$celebrant->id.'.jpg', 'Staff picture', ['width' => '100', 'class' => 'rounded-circle']) }}
+                            @else
+                            {{ Html::image('images/dummy-profile.png', 'Staff picture', ['width' => '100', 'class' => 'rounded-circle']) }}
+                            @endif
                             <p>
-                                <h5>Demi Soreks</h5>
-                                <span class="text-info">November 28</span>
+                                <h5>{{ $celebrant->first_name }}<br />{{ $celebrant->surname }}</h5>
+                                <span class="text-info">{{ date('F j', strtotime($celebrant->date_of_birth)) }}</span>
                             </p>
                         </div>
+                        <?php
+                        $i ++;
+                        if ($i >= $max) {
+                            break;
+                        }
+                        ?>
+                        @endforeach
+                        @endif
                     </div>
                     <a class="carousel-control-prev" href="#birthdays" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon text-info">&lt;</span>

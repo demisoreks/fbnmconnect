@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Input;
 use Redirect;
+use Storage;
+use Image;
 use App\HrmEmployee;
 
 class EmployeesController extends Controller
@@ -112,6 +114,44 @@ class EmployeesController extends Controller
             return Redirect::back()
                     ->with('error', '<span class="font-weight-bold">Unknown error!</span><br />Please contact administrator.')
                     ->withInput();
+        }
+    }
+    
+    public function directory() {
+        $employees = HrmEmployee::where('status', 'Active')->get();
+        return view('hrms.directory', compact('employees'));
+    }
+    
+    public function upload_picture(HrmEmployee $employee) {
+        $error = "";
+        if (Input::hasFile('picture')) {
+            if (!in_array(Input::file('picture')->getClientOriginalExtension(), ['jpg'])) {
+                $error .= "Invalid file type. Only jpg is allowed.<br />";
+            }
+            if (Input::file('picture')->getSize() > 1048576) {
+                $error .= "File too large. File must be less than 1MB.<br />";
+            }
+        }
+        if ($error != "") {
+            return Redirect::back()
+                    ->with('error', '<span class="font-weight-bold">Oops!</span><br />'.$error)
+                    ->withInput();
+        } else {
+            //Input::file('picture')->storeAs('public/pictures', $employee->id.'.jpg');
+            $img = Image::make(Input::file('picture')->getRealPath());
+            if ($img->width() > $img->height()) {
+                $img->resize(null, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+            } else {
+                $img->resize(300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+            }
+            $img->crop(300, 300);
+            Storage::put('public/pictures/'.$employee->id.'.jpg', $img->encode());
+            return Redirect::route('dashboard')
+                    ->with('success', '<span class="font-weight-bold">Successful!</span><br />Profile picture has been updated.');
         }
     }
 }
